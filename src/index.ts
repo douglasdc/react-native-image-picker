@@ -16,6 +16,7 @@ const DEFAULT_OPTIONS: ImagePickerOptions = {
   cancelButtonTitle: 'Cancel',
   takePhotoButtonTitle: 'Take Photo…',
   chooseFromLibraryButtonTitle: 'Choose from Library…',
+  intentCameraTitle: 'Capture Image or Video',
   quality: 1.0,
   allowsEditing: false,
   permissionDenied: {

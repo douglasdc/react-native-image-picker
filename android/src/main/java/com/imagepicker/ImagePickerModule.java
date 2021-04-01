@@ -255,6 +255,8 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
 
     int requestCode;
     Intent cameraIntent;
+    Intent videoIntent;
+    Intent chooserIntent = null;
 
     if (pickVideo)
     {
@@ -286,6 +288,24 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
         return;
       }
       cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraCaptureURI);
+
+      if (pickBoth)
+      {
+        String intentCameraTitle = "Capture Image or Video";
+        if (ReadableMapUtils.hasAndNotEmptyString(options, "intentCameraTitle"))
+        {
+          intentCameraTitle = options.getString("intentCameraTitle");
+        }
+        
+        videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, videoQuality);
+        if (videoDurationLimit > 0)
+        {
+          videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, videoDurationLimit);
+        }
+        chooserIntent = Intent.createChooser(cameraIntent, intentCameraTitle);
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{videoIntent});
+      }
     }
 
     if (cameraIntent.resolveActivity(reactContext.getPackageManager()) == null)
@@ -307,7 +327,14 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
 
     try
     {
-      currentActivity.startActivityForResult(cameraIntent, requestCode);
+      if (chooserIntent != null)
+      {
+        currentActivity.startActivityForResult(chooserIntent, requestCode);
+      }
+      else
+      {
+        currentActivity.startActivityForResult(cameraIntent, requestCode);
+      }
     }
     catch (ActivityNotFoundException e)
     {
@@ -408,8 +435,20 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
     switch (requestCode)
     {
       case REQUEST_LAUNCH_IMAGE_CAPTURE:
-        uri = cameraCaptureURI;
-        break;
+
+        if (data == null)
+        {
+          uri = cameraCaptureURI;
+        }
+        else{
+          final String pathh = getRealPathFromURI(data.getData());
+          responseHelper.putString("uri", data.getData().toString());
+          responseHelper.putString("path", pathh);
+          fileScan(reactContext, pathh);
+          responseHelper.invokeResponse(callback);
+          callback = null;
+        }
+        return;
 
       case REQUEST_LAUNCH_IMAGE_LIBRARY:
         uri = data.getData();

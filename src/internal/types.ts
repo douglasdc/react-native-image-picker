@@ -38,6 +38,7 @@ export interface ImagePickerOptions {
   takePhotoButtonTitle?: string;
   chooseFromLibraryButtonTitle?: string;
   chooseWhichLibraryTitle?: string;
+  intentCameraTitle?: string;
   customButtons?: ImagePickerCustomButtonOptions[];
   cameraType?: 'front' | 'back';
   mediaType?: 'photo' | 'video' | 'mixed';
