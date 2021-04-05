@@ -444,6 +444,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
           final String pathh = getRealPathFromURI(data.getData());
           responseHelper.putString("uri", data.getData().toString());
           responseHelper.putString("path", pathh);
+          putExtraFileInfo(pathh, responseHelper);
           fileScan(reactContext, pathh);
           responseHelper.invokeResponse(callback);
           callback = null;
