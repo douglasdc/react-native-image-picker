@@ -71,6 +71,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
   public static final int REQUEST_LAUNCH_VIDEO_CAPTURE    = 13004;
   public static final int REQUEST_PERMISSIONS_FOR_CAMERA  = 14001;
   public static final int REQUEST_PERMISSIONS_FOR_LIBRARY = 14002;
+  public static final String TAG = "HuggyIMP";
 
   private final ReactApplicationContext reactContext;
   private final int dialogThemeId;
@@ -439,6 +440,7 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
         if (data == null)
         {
           uri = cameraCaptureURI;
+          break;
         }
         else{
           final String pathh = getRealPathFromURI(data.getData());
@@ -448,8 +450,8 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
           fileScan(reactContext, pathh);
           responseHelper.invokeResponse(callback);
           callback = null;
+          return;
         }
-        return;
 
       case REQUEST_LAUNCH_IMAGE_LIBRARY:
         uri = data.getData();
